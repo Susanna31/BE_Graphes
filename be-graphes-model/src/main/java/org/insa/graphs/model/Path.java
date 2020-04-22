@@ -30,13 +30,50 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
+     * Need to be implemented.
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         // TODO:
+        if (nodes.size() == 1) {
+        	return new Path(graph, nodes.get(0));
+        }
+       
+        else {
+        for (Node i_node :nodes) {
+        	if (nodes.indexOf(i_node) < (nodes.size()-1)) {
+        		
+        		if (!i_node.hasSuccessors()) {
+            		throw new IllegalArgumentException();
+            	}
+        	
+        		Arc stockArc = null;
+        		for (Arc i_arcSucc :i_node.getSuccessors()) {
+        			if (i_arcSucc.getDestination() == nodes.get(nodes.indexOf(i_node)+1)) {
+        				if (stockArc != null) {
+        					if (i_arcSucc.getMinimumTravelTime() < stockArc.getMinimumTravelTime()) {
+                				stockArc = i_arcSucc;
+                			}
+        				}
+        				else {
+        					stockArc = i_arcSucc;
+        				}
+        			}
+        			}
+        		
+        		if (stockArc != null) {
+        			arcs.add(stockArc);
+        		}
+        		else {
+        			throw new IllegalArgumentException();
+        		}
+        	}
+        }
+        
+        
         return new Path(graph, arcs);
+        }
     }
 
     /**
@@ -51,15 +88,51 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
+     * Need to be implemented.
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         // TODO:
+        if (nodes.size() == 1) {
+        	return new Path(graph, nodes.get(0));
+        }
+       
+        else {
+        for (Node i_node :nodes) {
+        	if (nodes.indexOf(i_node) < (nodes.size()-1)) {
+        		
+        		if (!i_node.hasSuccessors()) {
+            		throw new IllegalArgumentException();
+            	}
+        	
+        		Arc stockArc = null;
+        		for (Arc i_arcSucc :i_node.getSuccessors()) {
+        			if (i_arcSucc.getDestination() == nodes.get(nodes.indexOf(i_node)+1)) {
+        				if (stockArc != null) {
+        					if (i_arcSucc.getLength() < stockArc.getLength()) {
+                				stockArc = i_arcSucc;
+                			}
+        				}
+        				else {
+        					stockArc = i_arcSucc;
+        				}
+        			}
+        			}
+        		
+        		if (stockArc != null) {
+        			arcs.add(stockArc);
+        		}
+        		else {
+        			throw new IllegalArgumentException();
+        		}
+        	}
+        }
+        
+        
         return new Path(graph, arcs);
+        }
     }
-
     /**
      * Concatenate the given paths.
      * 
@@ -263,11 +336,15 @@ public class Path {
      * 
      * @return Minimum travel time to travel this path (in seconds).
      * 
-     * @deprecated Need to be implemented.
+     * Need to be implemented.
      */
     public double getMinimumTravelTime() {
         // TODO:
-        return 0;
+    	double min_travel_time = 0.0;
+    	for (Arc i_arc :this.arcs) {
+    		min_travel_time += i_arc.getMinimumTravelTime();
+    	}
+        return min_travel_time;
     }
 
 }
