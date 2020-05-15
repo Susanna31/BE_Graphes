@@ -1,6 +1,7 @@
 package org.insa.graphs.algorithm.shortestpath;
 
 import org.insa.graphs.model.Graph;
+import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.*;
 import org.insa.graphs.model.*;
 import java.util.ArrayList;
@@ -19,41 +20,61 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
         //initialisation
         
+        Graph graph = data.getGraph();
         ArrayList<Label> listeLabel = new ArrayList<Label>();
+        ArrayList<Arc> listeArcs = new ArrayList<Arc>();
         BinaryHeap<Label> tas = new BinaryHeap<Label>();
         Label label;
-        Label successeur; //a enlever et definir dans le for
-        //successeurs
-        for (Node iNode : this.data.getGraph().getNodes()) {
-        	
-        }
+        int N = graph.size();
+        int nbMarqueTrue = 0;
         
-        for (Node iNode : this.data.getGraph().getNodes()) {
-        	if (iNode != this.data.getOrigin()) {
-        		Label iLabel = new Label(iNode);
-        		listeLabel.add(iLabel);
+        
+       
+       
+        for (Node iNode : graph.getNodes()) {
+        	if (iNode != data.getOrigin()) {
+        		listeLabel.add(new Label(iNode));
         	}
         }
         
-        Label labelOrigine = new Label(this.data.getOrigin());
-        labelOrigine.cout = 0;
-        tas.insert(labelOrigine);
+        //reprendre ici
         
+        label = new Label(data.getOrigin());
+        label.cout = 0;
+        tas.insert(label);
         
+       
         //iterations
         
-        while (1) { //il existe des sommets non marqus
-        	label = tas.findMin();
-        	label.marque = true;
-        	for (Label iLabel : listeLabel) { //pour tous les y successeurs de x
-        		if (successeur.marque = false) {
-        			successeur.cout = min(successeur.cout, label.cout); //+cout trajet x a y )
-        			if () { //cout success a ete mis a jour
-        				tas.insert(successeur);
-        				//mettre a jour pere successeur
+        while (nbMarqueTrue < N) { //il existe des sommets non marques
+        	label = tas.deleteMin();
+            label.marque = true;
+            nbMarqueTrue ++;
+        	for (Arc successeur : label.sommet.getSuccessors()) { //pour tous les y successeurs de x
+        		for (Label iLabel : listeLabel) {
+        			if (iLabel.sommet == successeur.getDestination()) {
+        				if (iLabel.marque = false) {
+        					if (Math.min(iLabel.cout, label.cout + data.getCost(successeur)) != iLabel.cout) {
+        						iLabel.cout = Math.min(iLabel.cout, label.cout + data.getCost(successeur));
+        						tas.remove(iLabel);
+        						tas.insert(iLabel);
+        					}
+        					
+        				}
         			}
         		}
+        		listeArcs.add(successeur);
         	}
+        }
+        
+        Path solutionPath = new Path(graph, listeArcs);
+        
+        
+        if (solutionPath.getDestination() != data.getDestination()) {
+        	solution = new ShortestPathSolution(data, Status.INFEASIBLE, solutionPath);
+        }
+        else {
+        	solution = new ShortestPathSolution(data, Status.OPTIMAL, solutionPath);
         }
         
         return solution;

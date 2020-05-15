@@ -4,7 +4,7 @@ import org.insa.graphs.model.*;
 
 public class Label implements Comparable<Label> {
 	
-	private Node sommet;
+	protected Node sommet;
 	protected boolean marque;
 	protected double cout;
 	protected Arc pere;
@@ -12,7 +12,7 @@ public class Label implements Comparable<Label> {
 	public Label(Node sommet) {
 		this.sommet = sommet;
 		this.marque = false;
-		this.cout = 100000000000000000000000000000000000000.0;
+		this.cout = Double.POSITIVE_INFINITY;
 		this.pere = null;
 	}
 	
