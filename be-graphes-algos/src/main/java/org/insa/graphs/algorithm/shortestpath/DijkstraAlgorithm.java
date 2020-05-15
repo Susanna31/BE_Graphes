@@ -1,5 +1,7 @@
 package org.insa.graphs.algorithm.shortestpath;
 
+import org.insa.graphs.model.Graph;
+
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
     public DijkstraAlgorithm(ShortestPathData data) {

@@ -18,7 +18,7 @@ public class BellmanFordAlgorithm extends ShortestPathAlgorithm {
 
     @Override
     protected ShortestPathSolution doRun() {
-
+    	
         // Retrieve the graph.
         ShortestPathData data = getInputData();
         Graph graph = data.getGraph();
