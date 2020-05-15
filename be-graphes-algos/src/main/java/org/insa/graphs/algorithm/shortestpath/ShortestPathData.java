@@ -19,6 +19,7 @@ public class ShortestPathData extends AbstractInputData {
      * @param arcInspector Filter for arcs (used to allow only a specific set of
      *        arcs in the graph to be used).
      */
+    
     public ShortestPathData(Graph graph, Node origin, Node destination, ArcInspector arcInspector) {
         super(graph, arcInspector);
         this.origin = origin;
