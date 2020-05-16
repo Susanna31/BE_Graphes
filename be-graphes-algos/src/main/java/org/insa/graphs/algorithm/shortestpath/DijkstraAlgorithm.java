@@ -1,16 +1,20 @@
 package org.insa.graphs.algorithm.shortestpath;
 
-import org.insa.graphs.model.Graph;
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.*;
 import org.insa.graphs.model.*;
 import java.util.ArrayList;
+import java.util.Collections;
+
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
     }
+    
+    
+   
 
     @Override
     protected ShortestPathSolution doRun() {
@@ -21,61 +25,69 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         //initialisation
         
         Graph graph = data.getGraph();
-        ArrayList<Label> listeLabel = new ArrayList<Label>();
-        ArrayList<Arc> listeArcs = new ArrayList<Arc>();
         BinaryHeap<Label> tas = new BinaryHeap<Label>();
-        Label label;
         int N = graph.size();
         int nbMarqueTrue = 0;
-        
-        
-       
+        Label labelX;
+        Label labelY;
+        Label[] listeLabel = new Label[N];
+        Arc[] listeArcs = new Arc[N];
        
         for (Node iNode : graph.getNodes()) {
-        	if (iNode != data.getOrigin()) {
-        		listeLabel.add(new Label(iNode));
-        	}
+        	listeLabel[iNode.getId()] = new Label(iNode);
         }
+
+        listeLabel[data.getOrigin().getId()].cout = 0;
+        tas.insert(listeLabel[data.getOrigin().getId()]);
+        listeLabel[data.getOrigin().getId()].presentTas = true;
         
-        //reprendre ici
-        
-        label = new Label(data.getOrigin());
-        label.cout = 0;
-        tas.insert(label);
-        
-       
-        //iterations
-        
-        while (nbMarqueTrue < N) { //il existe des sommets non marques
-        	label = tas.deleteMin();
-            label.marque = true;
-            nbMarqueTrue ++;
-        	for (Arc successeur : label.sommet.getSuccessors()) { //pour tous les y successeurs de x
-        		for (Label iLabel : listeLabel) {
-        			if (iLabel.sommet == successeur.getDestination()) {
-        				if (iLabel.marque = false) {
-        					if (Math.min(iLabel.cout, label.cout + data.getCost(successeur)) != iLabel.cout) {
-        						iLabel.cout = Math.min(iLabel.cout, label.cout + data.getCost(successeur));
-        						tas.remove(iLabel);
-        						tas.insert(iLabel);
-        					}
-        					
+
+        while (nbMarqueTrue < N) {
+        	labelX = tas.deleteMin();
+        	listeLabel[labelX.getSommet().getId()].marque = true;
+        	nbMarqueTrue++;
+        	for (Arc successeur : labelX.getSommet().getSuccessors()) {
+        		labelY = listeLabel[successeur.getDestination().getId()];
+        		if (labelY.marque != true) {
+        			double costX = labelX.cout;
+        			double w = this.data.getCost(successeur);
+        			if (labelY.cout > (costX + w)) {
+        				labelY.cout = costX+w;
+        				if (labelY.presentTas) {
+        					tas.remove(labelY);
+        					tas.insert(labelY);
         				}
+        				else {
+        					tas.insert(labelY);
+        					listeLabel[labelY.getSommet().getId()].presentTas = true;
+        				}
+        				listeArcs[labelY.getSommet().getId()] = successeur;
         			}
         		}
-        		listeArcs.add(successeur);
         	}
+        	
         }
         
-        Path solutionPath = new Path(graph, listeArcs);
+        ArrayList<Arc> arcList = new ArrayList<>();
+        Arc arc = listeArcs[data.getOrigin().getId()];
+        while (arc != null) {
+            arcList.add(arc);
+            arc = listeArcs[arc.getDestination().getId()];
+        }
+        
+        Collections.reverse(arcList);
+        
+    
+        Path solutionPath = new Path(graph, arcList);
         
         
-        if (solutionPath.getDestination() != data.getDestination()) {
+        /*if (solutionPath.getDestination() != data.getDestination()) {
         	solution = new ShortestPathSolution(data, Status.INFEASIBLE, solutionPath);
         }
-        else {
-        	solution = new ShortestPathSolution(data, Status.OPTIMAL, solutionPath);
-        }
+        else {*/
+        solution = new ShortestPathSolution(data, Status.OPTIMAL, solutionPath);
+        //}
+        
         
         return solution;
     }
