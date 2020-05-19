@@ -50,7 +50,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         		labelY = listeLabel[successeur.getDestination().getId()];
         		if (labelY.marque != true) {
         			double costX = labelX.cout;
-        			double w = this.data.getCost(successeur);
+        			double w = data.getCost(successeur);
         			if (labelY.cout > (costX + w)) {
         				labelY.cout = costX+w;
         				if (labelY.presentTas) {
@@ -81,14 +81,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Path solutionPath = new Path(graph, arcList);
         
         
-        /*if (solutionPath.getDestination() != data.getDestination()) {
-        	solution = new ShortestPathSolution(data, Status.INFEASIBLE, solutionPath);
-        }
-        else {*/
         solution = new ShortestPathSolution(data, Status.OPTIMAL, solutionPath);
-        //}
         
-        
+
         return solution;
     }
 
