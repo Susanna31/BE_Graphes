@@ -27,7 +27,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Graph graph = data.getGraph();
         BinaryHeap<Label> tas = new BinaryHeap<Label>();
         int N = graph.size();
-        int nbMarqueTrue = 0;
         Label labelX;
         Label labelY;
         Label[] listeLabel = new Label[N];
@@ -42,11 +41,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         listeLabel[data.getOrigin().getId()].presentTas = true;
         
 
-        while (nbMarqueTrue < N) {
+        while ((!tas.isEmpty()) && (listeLabel[data.getDestination().getId()].marque != true)) {
         	labelX = tas.deleteMin();
         	listeLabel[labelX.getSommet().getId()].marque = true;
-        	nbMarqueTrue++;
         	for (Arc successeur : labelX.getSommet().getSuccessors()) {
+        		if (!data.isAllowed(successeur)) {
+                    continue;
+                }
         		labelY = listeLabel[successeur.getDestination().getId()];
         		if (labelY.marque != true) {
         			double costX = labelX.cout;
@@ -69,10 +70,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         }
         
         ArrayList<Arc> arcList = new ArrayList<>();
-        Arc arc = listeArcs[data.getOrigin().getId()];
+        Arc arc = listeArcs[data.getDestination().getId()];
         while (arc != null) {
             arcList.add(arc);
-            arc = listeArcs[arc.getDestination().getId()];
+            arc = listeArcs[arc.getOrigin().getId()];
         }
         
         Collections.reverse(arcList);
