@@ -22,12 +22,14 @@ public class LabelStar extends Label implements Comparable<Label>{
 		this.coutEsti = dist;
 	}
 	
-	public double getCoutEsti() {
-		return this.coutEsti;
-	}
-	
+	@Override
 	public double getTotalCost() {
 		return (this.cout + this.coutEsti);
+	}
+	
+	@Override
+	public double getCoutEsti() {
+		return this.coutEsti;
 	}
 	
 	@Override
@@ -41,7 +43,15 @@ public class LabelStar extends Label implements Comparable<Label>{
 				return 1;
 			}
 			else {
-				return 0;
+				if(this.getCout() < compareTo.getCout()) {
+					return -1;
+				}
+				else if(this.getCout() > compareTo.getCout()) {
+					return 1;
+				}
+				else {
+					return 0;
+				}
 			}
 		}
 		

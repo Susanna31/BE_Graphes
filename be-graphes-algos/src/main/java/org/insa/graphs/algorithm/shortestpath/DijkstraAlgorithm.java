@@ -37,18 +37,36 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
        
         for (Node iNode : graph.getNodes()) {
         	//listeLabel[iNode.getId()] = new Label(iNode);
+        	
         	if (data.getMode() == AbstractInputData.Mode.LENGTH) {
-        		double dist = iNode.getPoint().distanceTo(data.getDestination().getPoint());
+        		double dist = (double)iNode.getPoint().distanceTo(data.getDestination().getPoint());
         		listeLabel[iNode.getId()] = createLabel(iNode, dist);
         	}
         	else if (data.getMode() == AbstractInputData.Mode.TIME){
-        		double dist = ((iNode.getPoint().distanceTo(data.getDestination().getPoint()))/graph.getGraphInformation().getMaximumSpeed());
-        		System.out.println(data.getMaximumSpeed());
-        		listeLabel[iNode.getId()] = createLabel(iNode, dist);
+        		if ((data.getMaximumSpeed() == -1) && (graph.getGraphInformation().getMaximumSpeed() == -1)) {
+        			double dist = ((iNode.getPoint().distanceTo(data.getDestination().getPoint()))/((130*1000)/(3600)));
+        			listeLabel[iNode.getId()] = createLabel(iNode, dist);
+        		}
+        		else if ((data.getMaximumSpeed() == -1) || (data.getMaximumSpeed() == GraphStatistics.NO_MAXIMUM_SPEED)) {
+        			double dist = ((iNode.getPoint().distanceTo(data.getDestination().getPoint()))/graph.getGraphInformation().getMaximumSpeed());
+        			listeLabel[iNode.getId()] = createLabel(iNode, dist);
+        		}
+        		else if ((graph.getGraphInformation().getMaximumSpeed() == -1) || (graph.getGraphInformation().getMaximumSpeed() == GraphStatistics.NO_MAXIMUM_SPEED)) {
+        			double dist = ((iNode.getPoint().distanceTo(data.getDestination().getPoint()))/data.getMaximumSpeed());
+        			listeLabel[iNode.getId()] = createLabel(iNode, dist);
+        		}
+        		else if ((data.getMaximumSpeed() != -1) && (graph.getGraphInformation().getMaximumSpeed() != -1)){
+        			double dist = ((iNode.getPoint().distanceTo(data.getDestination().getPoint()))/Math.min(data.getMaximumSpeed(),graph.getGraphInformation().getMaximumSpeed()));
+        			listeLabel[iNode.getId()] = createLabel(iNode, dist);
+        		}
+        		else {
+        			double dist = ((iNode.getPoint().distanceTo(data.getDestination().getPoint()))/((130*1000)/(3600)));
+        			listeLabel[iNode.getId()] = createLabel(iNode, dist);
+        		}
         	}
         }
 
-        listeLabel[data.getOrigin().getId()].cout = 0;
+        listeLabel[data.getOrigin().getId()].cout = 0.0;
         tas.insert(listeLabel[data.getOrigin().getId()]);
         listeLabel[data.getOrigin().getId()].presentTas = true;
         
@@ -59,9 +77,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         while ((!tas.isEmpty()) && (listeLabel[data.getDestination().getId()].marque != true)) {
         	labelX = tas.deleteMin();
         	listeLabel[labelX.getSommet().getId()].marque = true;
-        	//verification cout croissant
-        	//System.out.println(labelX.cout);
-        	//notification node marque
         	notifyNodeMarked(labelX.getSommet());
         	for (Arc successeur : labelX.getSommet().getSuccessors()) {
         		if (!data.isAllowed(successeur)) {
