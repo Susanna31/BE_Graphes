@@ -13,6 +13,7 @@ public class LabelStar extends Label implements Comparable<Label>{
 	protected double coutEsti;
 	
 	
+	
 	public LabelStar(Node sommet, double dist) {
 		super(sommet);
 		this.marque = false;
@@ -24,13 +25,14 @@ public class LabelStar extends Label implements Comparable<Label>{
 	
 	@Override
 	public double getTotalCost() {
-		return (this.cout + this.coutEsti);
+		return (this.getCout() + this.getCoutEsti());
 	}
 	
 	@Override
 	public double getCoutEsti() {
 		return this.coutEsti;
 	}
+	
 	
 	@Override
 	public int compareTo(Label compareTo) {
@@ -63,5 +65,6 @@ public class LabelStar extends Label implements Comparable<Label>{
 			return 1;
 		}
 	}
+	
 		
 }

@@ -147,7 +147,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     		this.deleteMin();
     	}
     	else {
-    		if(index != this.currentSize) {
+    		if(index != (this.currentSize-1)) {
     			E lastItem = this.array.get(--this.currentSize);
     			this.arraySet(index, lastItem);
     			this.percolateDown(index);

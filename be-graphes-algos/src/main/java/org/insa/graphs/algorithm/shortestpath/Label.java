@@ -49,4 +49,16 @@ public class Label implements Comparable<Label> {
 			return 1;
 		}
 	}
+	/*@Override
+	public int compareTo(Label compareTo) {
+		if (this.getCout() == compareTo.getCout()) {
+			return 0;
+		}
+		else if(this.getCout() < compareTo.getCout()) {
+			return -1;
+		}
+		else {
+			return 1;
+		}
+	}*/
 }
