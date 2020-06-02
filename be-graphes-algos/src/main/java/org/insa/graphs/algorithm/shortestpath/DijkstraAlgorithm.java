@@ -86,13 +86,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 }
         		labelY = listeLabel[successeur.getDestination().getId()];
         		if (labelY.marque != true) {
-        			double costX = (labelX.getCout() + labelX.getCoutEsti());
+        			double costX = (labelX.getTotalCost());
         			System.out.println("costX " + labelX.getTotalCost());
         			System.out.println("coutEstiX " + labelX.getCoutEsti());
         			System.out.println("costX " + labelX.getCout());
         			double w = data.getCost(successeur);
         			System.out.println("w " + w);
-        			double oldCost = (labelY.getCout() + labelY.getCoutEsti());
+        			double oldCost = (labelY.getTotalCost());
         			System.out.println("oldCost " + labelY.getTotalCost());
         			if (oldCost > (costX + w)) {
         				labelY.cout = labelX.getCout() + w;

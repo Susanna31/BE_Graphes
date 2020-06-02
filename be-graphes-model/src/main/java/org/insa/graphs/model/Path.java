@@ -279,7 +279,7 @@ public class Path {
     		return true;
     	}
     
-    	if (this.getArcs().size() == 0) {
+    	if (this.getArcs().size() == 0 && !this.isEmpty()) {
     		return true;
     	}
     	
